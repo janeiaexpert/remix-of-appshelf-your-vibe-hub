@@ -14,7 +14,92 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      app_notes: {
+        Row: {
+          app_id: string
+          content: string
+          created_at: string
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          app_id: string
+          content: string
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          app_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "app_notes_app_id_fkey"
+            columns: ["app_id"]
+            isOneToOne: false
+            referencedRelation: "apps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      apps: {
+        Row: {
+          app_url: string
+          category: string
+          created_at: string
+          description: string
+          id: string
+          is_archived: boolean
+          is_favorite: boolean
+          name: string
+          platform: string
+          repo_url: string
+          status: string
+          tags: string[]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          app_url?: string
+          category?: string
+          created_at?: string
+          description?: string
+          id?: string
+          is_archived?: boolean
+          is_favorite?: boolean
+          name: string
+          platform?: string
+          repo_url?: string
+          status?: string
+          tags?: string[]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          app_url?: string
+          category?: string
+          created_at?: string
+          description?: string
+          id?: string
+          is_archived?: boolean
+          is_favorite?: boolean
+          name?: string
+          platform?: string
+          repo_url?: string
+          status?: string
+          tags?: string[]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
