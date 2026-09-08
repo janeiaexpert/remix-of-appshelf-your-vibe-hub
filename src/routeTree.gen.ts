@@ -13,7 +13,9 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedArquivadosRouteImport } from './routes/_authenticated/arquivados'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAppsIndexRouteImport } from './routes/_authenticated/apps.index'
+import { Route as AuthenticatedAppsIdRouteImport } from './routes/_authenticated/apps.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -34,9 +36,19 @@ const AuthenticatedArquivadosRoute = AuthenticatedArquivadosRouteImport.update({
   path: '/arquivados',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedAppsIndexRoute = AuthenticatedAppsIndexRouteImport.update({
   id: '/apps/',
   path: '/apps/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAppsIdRoute = AuthenticatedAppsIdRouteImport.update({
+  id: '/apps/$id',
+  path: '/apps/$id',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 
@@ -44,12 +56,16 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/arquivados': typeof AuthenticatedArquivadosRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/apps/$id': typeof AuthenticatedAppsIdRoute
   '/apps/': typeof AuthenticatedAppsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/arquivados': typeof AuthenticatedArquivadosRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/apps/$id': typeof AuthenticatedAppsIdRoute
   '/apps': typeof AuthenticatedAppsIndexRoute
 }
 export interface FileRoutesById {
@@ -58,19 +74,24 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/_authenticated/arquivados': typeof AuthenticatedArquivadosRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/apps/$id': typeof AuthenticatedAppsIdRoute
   '/_authenticated/apps/': typeof AuthenticatedAppsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/arquivados' | '/apps/'
+  fullPaths:
+    '/' | '/auth' | '/arquivados' | '/dashboard' | '/apps/$id' | '/apps/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/arquivados' | '/apps'
+  to: '/' | '/auth' | '/arquivados' | '/dashboard' | '/apps/$id' | '/apps'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
     | '/_authenticated/arquivados'
+    | '/_authenticated/dashboard'
+    | '/_authenticated/apps/$id'
     | '/_authenticated/apps/'
   fileRoutesById: FileRoutesById
 }
@@ -110,6 +131,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedArquivadosRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/apps/': {
       id: '/_authenticated/apps/'
       path: '/apps'
@@ -117,16 +145,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/apps/$id': {
+      id: '/_authenticated/apps/$id'
+      path: '/apps/$id'
+      fullPath: '/apps/$id'
+      preLoaderRoute: typeof AuthenticatedAppsIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedArquivadosRoute: typeof AuthenticatedArquivadosRoute
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedAppsIdRoute: typeof AuthenticatedAppsIdRoute
   AuthenticatedAppsIndexRoute: typeof AuthenticatedAppsIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedArquivadosRoute: AuthenticatedArquivadosRoute,
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedAppsIdRoute: AuthenticatedAppsIdRoute,
   AuthenticatedAppsIndexRoute: AuthenticatedAppsIndexRoute,
 }
 
