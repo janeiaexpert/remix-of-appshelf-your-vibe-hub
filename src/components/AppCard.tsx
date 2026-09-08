@@ -82,7 +82,11 @@ export function AppCard({ app, view, onToggleFavorite, onToggleArchive, onEdit, 
                     </>
                   )}
                 </DropdownMenuItem>
-                <DropdownMenuItem variant="destructive" onClick={() => onDelete(app)}>
+                <DropdownMenuItem
+                  className="text-destructive focus:text-destructive"
+                  onClick={() => onDelete(app)}
+                >
+
                   <Trash2 className="size-4" aria-hidden="true" /> Excluir
                 </DropdownMenuItem>
               </DropdownMenuContent>
