@@ -13,7 +13,10 @@ const CATEGORY_RULES: Array<{ category: string; terms: string[] }> = [
   { category: "E-commerce", terms: ["shop", "store", "commerce", "loja", "produto", "checkout"] },
   { category: "Social", terms: ["social", "community", "comunidade", "chat", "network"] },
   { category: "Portfólio", terms: ["portfolio", "portfólio", "showcase", "currículo", "resume"] },
-  { category: "Produtividade", terms: ["productivity", "produtividade", "task", "agenda", "note", "organize"] },
+  {
+    category: "Produtividade",
+    terms: ["productivity", "produtividade", "task", "agenda", "note", "organize"],
+  },
 ];
 
 function decodeEntities(value: string): string {
@@ -27,7 +30,9 @@ function decodeEntities(value: string): string {
   };
   return value
     .replace(/&#(\d+);/g, (_, code: string) => String.fromCodePoint(Number(code)))
-    .replace(/&#x([\da-f]+);/gi, (_, code: string) => String.fromCodePoint(Number.parseInt(code, 16)))
+    .replace(/&#x([\da-f]+);/gi, (_, code: string) =>
+      String.fromCodePoint(Number.parseInt(code, 16)),
+    )
     .replace(/&([a-z]+);/gi, (match, name: string) => entities[name.toLowerCase()] ?? match)
     .replace(/\s+/g, " ")
     .trim();
@@ -61,7 +66,8 @@ function normalizeAndValidateUrl(value: string): URL {
   } catch {
     throw new Error("Informe um link válido.");
   }
-  if (!['http:', 'https:'].includes(url.protocol)) throw new Error("O link precisa usar HTTP ou HTTPS.");
+  if (!["http:", "https:"].includes(url.protocol))
+    throw new Error("O link precisa usar HTTP ou HTTPS.");
 
   const hostname = url.hostname.toLowerCase().replace(/^\[|\]$/g, "");
   const blocked =
@@ -116,7 +122,8 @@ async function fetchPublicPage(initialUrl: URL): Promise<{ html: string; finalUr
       throw new Error("Esse link não aponta para uma página que possamos organizar.");
     }
     const declaredSize = Number(response.headers.get("content-length") ?? 0);
-    if (declaredSize > 1_500_000) throw new Error("A página é grande demais para a leitura automática.");
+    if (declaredSize > 1_500_000)
+      throw new Error("A página é grande demais para a leitura automática.");
     const html = (await response.text()).slice(0, 1_500_000);
     return { html, finalUrl: current };
   }
@@ -125,14 +132,19 @@ async function fetchPublicPage(initialUrl: URL): Promise<{ html: string; finalUr
 
 function inferCategory(text: string): string {
   const normalized = text.toLocaleLowerCase("pt-BR");
-  return CATEGORY_RULES.find(({ terms }) => terms.some((term) => normalized.includes(term)))?.category ?? "Outro";
+  return (
+    CATEGORY_RULES.find(({ terms }) => terms.some((term) => normalized.includes(term)))?.category ??
+    "Outro"
+  );
 }
 
 function inferPlatform(url: URL, text: string): string {
   const value = `${url.hostname} ${url.pathname} ${text}`.toLowerCase();
-  if (value.includes("chrome.google.com/webstore") || value.includes("extension")) return "Extensão";
+  if (value.includes("chrome.google.com/webstore") || value.includes("extension"))
+    return "Extensão";
   if (value.includes("api") || value.includes("developer")) return "API";
-  if (value.includes("mobile") || value.includes("android") || value.includes("iphone")) return "Mobile";
+  if (value.includes("mobile") || value.includes("android") || value.includes("iphone"))
+    return "Mobile";
   return "Web";
 }
 
@@ -151,7 +163,8 @@ export const importAppFromUrl = createServerFn({ method: "POST" })
   .handler(async ({ data }): Promise<AppInput> => {
     const requestedUrl = normalizeAndValidateUrl(data.url);
     const { html, finalUrl } = await fetchPublicPage(requestedUrl);
-    const rawTitle = metaContent(html, "og:title") || metaContent(html, "twitter:title") || pageTitle(html);
+    const rawTitle =
+      metaContent(html, "og:title") || metaContent(html, "twitter:title") || pageTitle(html);
     const hostnameName = finalUrl.hostname.replace(/^www\./, "").split(".")[0] ?? "Aplicativo";
     const name = (rawTitle.split(/\s+[|—–-]\s+/)[0] || hostnameName).trim().slice(0, 80);
     const description = (
@@ -161,7 +174,8 @@ export const importAppFromUrl = createServerFn({ method: "POST" })
     ).slice(0, 600);
     const keywords = metaContent(html, "keywords");
     const context = `${name} ${description} ${keywords}`;
-    const isGithub = finalUrl.hostname === "github.com" || finalUrl.hostname.endsWith(".github.com");
+    const isGithub =
+      finalUrl.hostname === "github.com" || finalUrl.hostname.endsWith(".github.com");
 
     return {
       name: name || "Aplicativo",

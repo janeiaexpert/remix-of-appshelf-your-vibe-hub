@@ -98,7 +98,8 @@ export function AppForm({ open, onOpenChange, app, saving, onSubmit }: Props) {
       if (showSuccess) toast.success("Dados encontrados e organizados.");
       return imported;
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Não conseguimos organizar esse link.";
+      const message =
+        error instanceof Error ? error.message : "Não conseguimos organizar esse link.";
       setErrors((previous) => ({ ...previous, app_url: message }));
       return undefined;
     } finally {
@@ -154,7 +155,9 @@ export function AppForm({ open, onOpenChange, app, saving, onSubmit }: Props) {
             {app ? "Editar aplicativo" : "Novo aplicativo"}
           </DialogTitle>
           <DialogDescription>
-            {app ? "Atualize os dados deste projeto." : "Cole o link. O AppShelf cuida do restante."}
+            {app
+              ? "Atualize os dados deste projeto."
+              : "Cole o link. O AppShelf cuida do restante."}
           </DialogDescription>
         </DialogHeader>
 
@@ -175,8 +178,18 @@ export function AppForm({ open, onOpenChange, app, saving, onSubmit }: Props) {
                 autoFocus={!app}
               />
               {!app && (
-                <Button type="button" variant="outline" onClick={() => void organizeLink()} disabled={importing || saving} aria-label="Organizar link automaticamente">
-                  {importing ? <Loader2 className="size-4 animate-spin" aria-hidden="true" /> : <Sparkles className="size-4" aria-hidden="true" />}
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => void organizeLink()}
+                  disabled={importing || saving}
+                  aria-label="Organizar link automaticamente"
+                >
+                  {importing ? (
+                    <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+                  ) : (
+                    <Sparkles className="size-4" aria-hidden="true" />
+                  )}
                 </Button>
               )}
             </div>
@@ -186,7 +199,10 @@ export function AppForm({ open, onOpenChange, app, saving, onSubmit }: Props) {
               </p>
             )}
             {!app && !errors["app_url"] && (
-              <p className="text-xs text-muted-foreground">Nome, descrição, categoria, plataforma, situação e etiquetas serão preenchidos automaticamente.</p>
+              <p className="text-xs text-muted-foreground">
+                Nome, descrição, categoria, plataforma, situação e etiquetas serão preenchidos
+                automaticamente.
+              </p>
             )}
           </div>
 
@@ -202,96 +218,122 @@ export function AppForm({ open, onOpenChange, app, saving, onSubmit }: Props) {
             <CollapsibleContent className="space-y-4 pt-2">
               <div className="space-y-2">
                 <Label htmlFor="name">Nome *</Label>
-                <Input id="name" value={values.name} onChange={(e) => set("name", e.target.value)} aria-invalid={Boolean(errors["name"])} aria-describedby={errors["name"] ? "name-error" : undefined} placeholder="Ex.: Diário de hábitos" />
-                {errors["name"] && <p id="name-error" role="alert" className="text-sm text-destructive">{errors["name"]}</p>}
+                <Input
+                  id="name"
+                  value={values.name}
+                  onChange={(e) => set("name", e.target.value)}
+                  aria-invalid={Boolean(errors["name"])}
+                  aria-describedby={errors["name"] ? "name-error" : undefined}
+                  placeholder="Ex.: Diário de hábitos"
+                />
+                {errors["name"] && (
+                  <p id="name-error" role="alert" className="text-sm text-destructive">
+                    {errors["name"]}
+                  </p>
+                )}
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="description">Descrição</Label>
-                <Textarea id="description" rows={3} value={values.description} onChange={(e) => set("description", e.target.value)} placeholder="O que este app faz?" />
-                {errors["description"] && <p role="alert" className="text-sm text-destructive">{errors["description"]}</p>}
+                <Textarea
+                  id="description"
+                  rows={3}
+                  value={values.description}
+                  onChange={(e) => set("description", e.target.value)}
+                  placeholder="O que este app faz?"
+                />
+                {errors["description"] && (
+                  <p role="alert" className="text-sm text-destructive">
+                    {errors["description"]}
+                  </p>
+                )}
               </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="final_app_url">Link público</Label>
-              <Input id="final_app_url" value={values.app_url} onChange={(e) => set("app_url", e.target.value)} placeholder="meuapp.lovable.app" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="repo_url">Link do código</Label>
-              <Input
-                id="repo_url"
-                value={values.repo_url}
-                onChange={(e) => set("repo_url", e.target.value)}
-                aria-invalid={Boolean(errors["repo_url"])}
-                placeholder="github.com/voce/projeto"
-              />
-              {errors["repo_url"] && (
-                <p role="alert" className="text-sm text-destructive">
-                  {errors["repo_url"]}
-                </p>
-              )}
-            </div>
-          </div>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="final_app_url">Link público</Label>
+                  <Input
+                    id="final_app_url"
+                    value={values.app_url}
+                    onChange={(e) => set("app_url", e.target.value)}
+                    placeholder="meuapp.lovable.app"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="repo_url">Link do código</Label>
+                  <Input
+                    id="repo_url"
+                    value={values.repo_url}
+                    onChange={(e) => set("repo_url", e.target.value)}
+                    aria-invalid={Boolean(errors["repo_url"])}
+                    placeholder="github.com/voce/projeto"
+                  />
+                  {errors["repo_url"] && (
+                    <p role="alert" className="text-sm text-destructive">
+                      {errors["repo_url"]}
+                    </p>
+                  )}
+                </div>
+              </div>
 
-          <div className="grid gap-4 sm:grid-cols-3">
-            <div className="space-y-2">
-              <Label htmlFor="category">Categoria</Label>
-              <Select value={values.category} onValueChange={(v) => set("category", v)}>
-                <SelectTrigger id="category">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {CATEGORIES.map((c) => (
-                    <SelectItem key={c} value={c}>
-                      {c}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="platform">Plataforma</Label>
-              <Select value={values.platform} onValueChange={(v) => set("platform", v)}>
-                <SelectTrigger id="platform">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {PLATFORMS.map((p) => (
-                    <SelectItem key={p} value={p}>
-                      {p}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="status">Situação</Label>
-              <Select value={values.status} onValueChange={(v) => set("status", v)}>
-                <SelectTrigger id="status">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {STATUSES.map((s) => (
-                    <SelectItem key={s.value} value={s.value}>
-                      {s.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
+              <div className="grid gap-4 sm:grid-cols-3">
+                <div className="space-y-2">
+                  <Label htmlFor="category">Categoria</Label>
+                  <Select value={values.category} onValueChange={(v) => set("category", v)}>
+                    <SelectTrigger id="category">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {CATEGORIES.map((c) => (
+                        <SelectItem key={c} value={c}>
+                          {c}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="platform">Plataforma</Label>
+                  <Select value={values.platform} onValueChange={(v) => set("platform", v)}>
+                    <SelectTrigger id="platform">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {PLATFORMS.map((p) => (
+                        <SelectItem key={p} value={p}>
+                          {p}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="status">Situação</Label>
+                  <Select value={values.status} onValueChange={(v) => set("status", v)}>
+                    <SelectTrigger id="status">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {STATUSES.map((s) => (
+                        <SelectItem key={s.value} value={s.value}>
+                          {s.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="tags">Etiquetas</Label>
-            <Input
-              id="tags"
-              value={tagText}
-              onChange={(e) => setTagText(e.target.value)}
-              placeholder="react, ia, protótipo"
-            />
-            <p className="text-xs text-muted-foreground">Separe por vírgulas.</p>
-          </div>
+              <div className="space-y-2">
+                <Label htmlFor="tags">Etiquetas</Label>
+                <Input
+                  id="tags"
+                  value={tagText}
+                  onChange={(e) => setTagText(e.target.value)}
+                  placeholder="react, ia, protótipo"
+                />
+                <p className="text-xs text-muted-foreground">Separe por vírgulas.</p>
+              </div>
             </CollapsibleContent>
           </Collapsible>
 
@@ -300,7 +342,9 @@ export function AppForm({ open, onOpenChange, app, saving, onSubmit }: Props) {
               Cancelar
             </Button>
             <Button type="submit" disabled={saving || importing}>
-              {(saving || importing) && <Loader2 className="size-4 animate-spin" aria-hidden="true" />}
+              {(saving || importing) && (
+                <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+              )}
               {app ? "Salvar alterações" : "Organizar e adicionar"}
             </Button>
           </DialogFooter>
