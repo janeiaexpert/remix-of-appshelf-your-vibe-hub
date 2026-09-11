@@ -190,7 +190,7 @@ export function AppForm({ open, onOpenChange, app, saving, onSubmit }: Props) {
             )}
           </div>
 
-          <Collapsible open={app || detailsOpen} onOpenChange={setDetailsOpen}>
+          <Collapsible open={Boolean(app) || detailsOpen} onOpenChange={setDetailsOpen}>
             {!app && (
               <CollapsibleTrigger asChild>
                 <Button type="button" variant="ghost" className="w-full justify-between px-0">
